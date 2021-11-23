@@ -10,8 +10,50 @@ body {
 
 #webgl{
     margin: 0;
-    width:100%;
-    height:auto;
-    background-color:black;
+    background-color:red;
+}
+
+#affichage{
+    position: absolute;
+    color: white;
+    background-color: red;
+    display: grid;
+    grid-template-rows: 1/4 1/4 1/4 1/4 ;
+    margin-top: 3%;
+    width: 16em;
+    height: 13em;
+    border: solid;
+    border-color: white;
+    border-radius: 2em;
+    margin-left: 1%;
+    padding-left: 1%;
+    opacity: 10%;
+}
+
+#affichage:hover{
+    animation-name: showMe;
+    animation-timing-function: linear;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+}
+
+#score{
+    display: grid;
+    grid-template-columns: 2/7 1/7 1/7 1/7 1/7 1/7;
+    grid-template-rows: 100%;
+}
+
+.case{
+    border: solid;
+    border-color: white;
+}
+
+@keyframes showMe {
+    0%{
+        opacity: 10%;
+    }
+    100%{
+        opacity: 100%;
+    }
 }
 
