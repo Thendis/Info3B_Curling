@@ -123,7 +123,7 @@ function drawVecteur(MaScene, A, B, coulHexa, longCone, rayonCone) {
     var inf = drawLathe(pierreInf, 0xFFFFFF);
     var mid = drawLathe(pierreMid, colorCenter);
     var sup = drawLathe(pierreSup, 0xFFFFFF);
-    var hand1 = drawLathe(pierreHand1, 0xFFFFFF);
+    var hand1 = drawLathe(pierreHand1, colorCenter);
     
     /*Fusion des parties*/
     mid.add(inf);

@@ -36,11 +36,10 @@ function aim(MaScene, objet, target) {
     return points;
 }
 
-function deplacePierre(MaScene, menuGUI,pierre, courbe, camera) {
+function deplacePierre(MaScene, menuGUI,pierre, courbe, target,camera) {
     var anima = setInterval(function () {
         var name = pierre.name;
         var color;
-        menuGUI.controls.enabled = false;
         if (cmp < fluidite) {
             var thisPoint = courbe[cmp];
             MaScene.remove(MaScene.getObjectByName(name));
@@ -50,7 +49,8 @@ function deplacePierre(MaScene, menuGUI,pierre, courbe, camera) {
             camera.lookAt(pierreFocus.position);
             cmp++;
         }
-        if(cmp>fluidite){
+        if(cmp>=fluidite){
+            document.getElementById("score").innerHTML = "<p>"+calculPoints(thisPoint,target)+"</p>";
             cmp = 0;
             clearInterval(anima);
         }
@@ -58,8 +58,11 @@ function deplacePierre(MaScene, menuGUI,pierre, courbe, camera) {
     setTimeout(function(){
         camera.position.set(-400, 0, 100);
         camera.lookAt(new THREE.Vector3(0,0,0));
-        menuGUI.controls.enabled = true; // /!\ Ne reactive pas l'orbitControl
     }, 6000);
+}
+
+function calculPoints(position, target){
+    return Math.floor((900-position.distanceTo(target))/10);
 }
 
 function getCoefMulti(pierre, positionVise) {

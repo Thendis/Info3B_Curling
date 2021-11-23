@@ -1,0 +1,16 @@
+- Bloquer la commande de lancer lorsque un lancer est déjà en cours
+
+- Calcule et affichage des points 
+	(Modifier la fonction qui dessine la cible pour qu'elle return la dist)
++
+- Affichage du tableau des scores et des tours
+
+
+
+
+
+
+
+
+
+/*REVOIR LES COMMENTAIRES ET LA MISE EN PAGE*/
