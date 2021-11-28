@@ -48,6 +48,16 @@ body {
     border-color: white;
 }
 
+#guiCont{
+    position: absolute;
+    margin-top: 40%;
+    margin-left: 0;
+    border: solid;
+    border-color: blue;
+    width: auto;
+    height: auto;
+}
+
 @keyframes showMe {
     0%{
         opacity: 10%;
@@ -55,5 +65,11 @@ body {
     100%{
         opacity: 100%;
     }
+}
+
+#push{
+    position: absolute;
+    margin-left: 50%;
+    margin-top: 30%;
 }
 
