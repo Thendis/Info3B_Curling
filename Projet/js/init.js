@@ -1,11 +1,13 @@
-var colorTeam1 = 0xff0000;
-var colorTeam2 = 0x0000ff;
+var colorTeam1 = "#ff0000";
+var colorTeam2 = "#0000ff";
+var scoreTeam1 = [];
+var scoreTeam2 = [];
 var target = new THREE.Vector3(900, 0, 0); //Centre de la cible
 var tours = 0;
 /*MENU GUI*/
-var gui = new dat.GUI({autoPlace: false});
+var gui = new dat.GUI({ autoPlace: false });
 var customContainer = document.getElementById('guiCont');
-setTimeout(function(){
+setTimeout(function () {
   customContainer.appendChild(gui.domElement);
 }, 100); // Besoin car sinon essai de créer alors que le body n'est pas generé.
 var menuGUI = new function () {
@@ -17,8 +19,9 @@ var menuGUI = new function () {
   this.lancer = false;
   this.pushValue = 0;
   this.pierreF = null;
+  this.camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 0.1, 1000000);
+  this.scoreTeam = [];
 }
-
 
 function init() {
   /*Initialisation*/
@@ -26,14 +29,13 @@ function init() {
   let rendu = new THREE.WebGLRenderer({ antialias: true });
   rendu.shadowMap.enabled = true;
   let scene = new THREE.Scene();
-  let camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 0.1, 1000000);
   rendu.shadowMap.enabled = true;
   rendu.setClearColor(new THREE.Color(0x000000));
   rendu.setSize(window.innerWidth, window.innerHeight);
-  cameraLumiere(scene, camera);
-  lumiere(scene, camera);
-  camera.position.set(-400, 0, 100);
-  camera.lookAt(new THREE.Vector3(0, 0, 0));
+  cameraLumiere(scene, menuGUI.camera);
+  lumiere(scene, menuGUI.camera);
+  menuGUI.camera.position.set(-400, 0, 100);
+  menuGUI.camera.lookAt(new THREE.Vector3(0, 0, 0));
   drawRepere(scene);
   /*fin Initialisation*/
 
@@ -49,21 +51,20 @@ function init() {
   });
   param.add(menuGUI, 'vision', ["Standard", "Cible", "Large"]).onChange(function (e) {
     if (menuGUI.vision == "Standard") {
-      camera.position.set(-400, 0, 100);
-      camera.lookAt(new THREE.Vector3(0, 0, 0));
+      menuGUI.camera.position.set(-400, 0, 100);
+      menuGUI.camera.lookAt(new THREE.Vector3(0, 0, 0));
     } else if (menuGUI.vision == "Cible") {
-      camera.position.set(900, 0, 600);
-      camera.lookAt(target);
+      menuGUI.camera.position.set(900, 0, 600);
+      menuGUI.camera.lookAt(target);
     } else if (menuGUI.vision == "Large") {
-      camera.position.set(-400, -800, 2000);
-      camera.lookAt(new THREE.Vector3(500, 0, 0));
+      menuGUI.camera.position.set(-400, -800, 2000);
+      menuGUI.camera.lookAt(new THREE.Vector3(500, 0, 0));
     }
   });
   param.add(menuGUI, 'lancer').onChange(function (e) {
     if (e) {
-      deplacePierre(scene, menuGUI, menuGUI.pierreF, menuGUI.points, target, camera);
+      deplacePierre(scene, menuGUI, menuGUI.pierreF, menuGUI.points, target, menuGUI.scoreTeam, tours);
       menuGUI.lancer = false;
-      document.getElementById("push").innerHTML += "<button onclick='nextTurn()'>Tour suivant</button>";
     }
   });
   /*Fin parametres de lancer */
@@ -78,7 +79,7 @@ function init() {
     }
   }, 100);
   document.getElementById("webgl").appendChild(rendu.domElement);
-  rendu.render(scene, camera);
+  rendu.render(scene, menuGUI.camera);
   renduAnim();
 
   //Va modéliser le terrain et la pierre en accord avec le moment du jeu
@@ -87,41 +88,61 @@ function init() {
     //A qui de jouer
     if (tours % 2 == 0) {
       menuGUI.color = colorTeam1;
+      menuGUI.scoreTeam = scoreTeam1;
     } else {
       menuGUI.color = colorTeam2;
+      menuGUI.scoreTeam = scoreTeam2;
     }
     drawGame(scene);
-    menuGUI.pierreF = drawPierre(scene, menuGUI.color, new THREE.Vector3(0, 0, 0), "pierre-" + menuGUI.color + "-" + tours);
+    menuGUI.pierreF = drawPierre(scene, menuGUI.color, new THREE.Vector3(0, 0, 0), "pierre-" + tours);
   }
 
   function renduAnim() {
     stats.update();
     //La lumière suit la cam
     scene.remove(scene.getObjectByName("lumCam"));
-    lumiere(scene, camera);
+    lumiere(scene, menuGUI.camera);
     //
 
     // render avec requestAnimationFrame
     requestAnimationFrame(renduAnim);
     // ajoute le rendu dans l'element HTML
-    rendu.render(scene, camera);
+    rendu.render(scene, menuGUI.camera);
   }
 
 }
 
-//N'actualise pas la caméra
+//Met en place le tour suivant
 function nextTurn() {
-  for(menuGUI.pushValue; menuGUI.pushValue>0; menuGUI.pushValue-=1){
+  for (menuGUI.pushValue; menuGUI.pushValue > 0; menuGUI.pushValue -= 1) {
     menuGUI.points.pop();
   }
   document.getElementById("push").innerHTML = "";
   menuGUI.pierreF = null;
+  menuGUI.camera.position.set(-400, 0, 100);
+  menuGUI.camera.lookAt(new THREE.Vector3(0, 0, 0));
+  if (tours % 2 == 0) {
+    document.getElementById("scoreTeam1").innerHTML = "<div>"+buildTable(menuGUI.scoreTeam)+"</div>";
+  } else {
+    document.getElementById("scoreTeam2").innerHTML = "<div>"+buildTable(menuGUI.scoreTeam)+"</div>";
+  }
   tours++;
 }
 
-function pushMe() {
+//Effectue x brossages
+function rub() {
   for (var i = 0; i < 10; i++) {
-    menuGUI.pushValue+=1;
+    menuGUI.pushValue += 1;
     menuGUI.points = bruch(menuGUI);
   }
+}
+
+//renvoie un String contenant l'affichage des resultat sous forme de <table>
+function buildTable(table){
+  var toReturn = "<table style='color:"+menuGUI.color+"'><tbody><tr>";
+  for(var i=0; i< table.length;i++){
+    toReturn += "<td>"+table[i]+"</td>"
+  }
+  toReturn +="</tr></tbody></table>"
+  return toReturn;
 }

@@ -105,17 +105,17 @@ function drawVecteur(MaScene, A, B, coulHexa, longCone, rayonCone) {
     );
 
     var pierreHand1 = new Array(
-      new THREE.Vector2(0,3),
-      new THREE.Vector2(0.3,3),
-      new THREE.Vector2(0.3,3.5),
-      new THREE.Vector2(0,3.5)
+      new THREE.Vector2(2,3),
+      new THREE.Vector2(1.5,3.3),
+      new THREE.Vector2(1,3.4),
+      new THREE.Vector2(0,3.4)
      );
 
      var pierreHand2 = new Array(
-      new THREE.Vector2(2,3.5),
-      new THREE.Vector2(0,4),
-      new THREE.Vector2(2,4),
-      new THREE.Vector2(2.2,3.5)
+      new THREE.Vector2(0,3.4),
+      new THREE.Vector2(.2,3.4),
+      new THREE.Vector2(.2,3.8),
+      new THREE.Vector2(.2,4)
      );
 
      /**Fin coordonnee**/

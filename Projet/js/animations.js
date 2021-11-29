@@ -50,8 +50,8 @@ function bruch(menuGUI){ //Ne prend en compte que la derniere valeur (Celle d'ar
     return pointsBruched;
 }
 
-function deplacePierre(MaScene, menuGUI,pierre, courbe, target,camera) {
-    document.getElementById("push").innerHTML += "<button onclick='pushMe()'>Push me</button>";
+function deplacePierre(MaScene, menuGUI,pierre, courbe, target, team, tours) {
+    document.getElementById("push").innerHTML += "<button onclick='rub()'>BALAIE</button>";
     var anima = setInterval(function () {
         var name = pierre.name;
         if (cmp < courbe.length) {
@@ -59,14 +59,20 @@ function deplacePierre(MaScene, menuGUI,pierre, courbe, target,camera) {
             MaScene.remove(MaScene.getObjectByName(name));
             var pierreFocus = drawPierre(MaScene, menuGUI.color, new THREE.Vector3(thisPoint.x, thisPoint.y, 0), name);
             MaScene.add(pierreFocus);
-            camera.position.set(thisPoint.x - 150, thisPoint.y, 35);
-            camera.lookAt(pierreFocus.position);
+            menuGUI.camera.position.set(thisPoint.x - 150, thisPoint.y, 35);
+            menuGUI.camera.lookAt(pierreFocus.position);
+            isColide(MaScene,pierreFocus,tours);
             cmp++;
         }
         if(cmp>=courbe.length){
+            team.push(calculPoints(thisPoint,target));
             document.getElementById("score").innerHTML = "<p>"+calculPoints(thisPoint,target)+"</p>";
             cmp = 0;
             clearInterval(anima);
+            document.getElementById("push").innerHTML = "";
+            setTimeout(function(){
+                document.getElementById("push").innerHTML = "<button onclick='nextTurn()'>TOUR SUIVANT</button>";
+            }, 1000);
         }
     },20);
 }
@@ -106,4 +112,19 @@ function getEcartMoy(){
     ecM[0] = (menuGUI.points[menuGUI.points.length-1].x - menuGUI.points[0].x)/fluidite;
     ecM[1] = (menuGUI.points[menuGUI.points.length-1].y - menuGUI.points[0].y)/(fluidite*3);
     return ecM;
+}
+
+//Fonction de detection de colision (Ecart entre x et y +1.5 (Rayon de la pierre))
+function isColide(MaScene, obj,tours){
+    var pos = obj.position;
+    var toReturn;
+    for(var i = 0 ; i<tours;i++){
+        var posPA = MaScene.getObjectByName("pierre-"+i).position;
+        if(Math.floor(pos.x) == Math.floor(posPA.x) && Math.floor(pos.y) == Math.floor(posPA.y)){
+            toReturn = MaScene.getObjectByName("pierre-"+i);
+            console.log("colision avec" + toReturn.name);
+            return toReturn;
+        }
+    }
+    return toReturn;
 }
