@@ -1,9 +1,10 @@
 - Bloquer la commande de lancer lorsque un lancer est déjà en cours
 
-- Calcule et affichage des points 
-	(Modifier la fonction qui dessine la cible pour qu'elle return la dist)
-+
-- Affichage du tableau des scores et des tours
+- Calcule et affichage des points (Calcule que si dans le cercle)
+ 
+- Modeliser le balaie et l'animation
+
+- Afficher la courbe ajouté par le brossage dans une couleur différente
 
 
 
@@ -14,3 +15,9 @@
 
 
 /*REVOIR LES COMMENTAIRES ET LA MISE EN PAGE*/
+
+/Note pour CR/
+- Les problemes rencontré 
+	- Pierre construite sur le coté (Rotate sur l'axe)
+	- Terrain pas a la bonne taille (Virtuellement plus grand)
+	- Brosse du chemin (Oublie de créer un nouvel objet )

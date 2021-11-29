@@ -35,30 +35,46 @@ function aim(MaScene, objet, target) {
     MaScene.add(courbe);
     return points;
 }
+//Allonge la trajectoire
+function bruch(menuGUI){ //Ne prend en compte que la derniere valeur (Celle d'arriver)
+    var ecM = getEcartMoy();
+    var pointsBruched = menuGUI.points;
+    var lastIdx = pointsBruched.length -1;
+    pointsBruched.push(new THREE.Vector2(pointsBruched[lastIdx].x, pointsBruched[lastIdx].y));
+    if(pointsBruched[lastIdx+1].y >0){
+        pointsBruched[lastIdx+1].y -=ecM[1];
+    } else if(pointsBruched[lastIdx+1].y<0){
+        pointsBruched[lastIdx+1].y +=ecM[1];
+    } 
+    pointsBruched[lastIdx+1].x +=ecM[0];
+    return pointsBruched;
+}
 
-function deplacePierre(MaScene, menuGUI,pierre, courbe, target,camera) {
+function deplacePierre(MaScene, menuGUI,pierre, courbe, target, team, tours) {
+    document.getElementById("push").innerHTML += "<button onclick='rub()'>BALAIE</button>";
     var anima = setInterval(function () {
         var name = pierre.name;
-        var color;
-        if (cmp < fluidite) {
+        if (cmp < courbe.length) {
             var thisPoint = courbe[cmp];
             MaScene.remove(MaScene.getObjectByName(name));
             var pierreFocus = drawPierre(MaScene, menuGUI.color, new THREE.Vector3(thisPoint.x, thisPoint.y, 0), name);
             MaScene.add(pierreFocus);
-            camera.position.set(thisPoint.x - 150, thisPoint.y, 35);
-            camera.lookAt(pierreFocus.position);
+            menuGUI.camera.position.set(thisPoint.x - 150, thisPoint.y, 35);
+            menuGUI.camera.lookAt(pierreFocus.position);
+            isColide(MaScene,pierreFocus,tours);
             cmp++;
         }
-        if(cmp>=fluidite){
+        if(cmp>=courbe.length){
+            team.push(calculPoints(thisPoint,target));
             document.getElementById("score").innerHTML = "<p>"+calculPoints(thisPoint,target)+"</p>";
             cmp = 0;
             clearInterval(anima);
+            document.getElementById("push").innerHTML = "";
+            setTimeout(function(){
+                document.getElementById("push").innerHTML = "<button onclick='nextTurn()'>TOUR SUIVANT</button>";
+            }, 1000);
         }
     },20);
-    setTimeout(function(){
-        camera.position.set(-400, 0, 100);
-        camera.lookAt(new THREE.Vector3(0,0,0));
-    }, 6000);
 }
 
 function calculPoints(position, target){
@@ -79,4 +95,36 @@ function getCoefMulti(pierre, positionVise) {
 
 function getOrigine(coef, point) {
     return point.position.y - (coef * point.position.x)
+}
+
+//Affiche l'array a partir de la valeur d'indice start
+function afficheArray(ar,start){
+    var toReturn = "";
+    for (var i=start;i<ar.length;i++){
+        toReturn+="("+Math.floor(ar[i].x)+"."+Math.floor(ar[i].y)+") + "+i+"\n";
+    }
+    return toReturn;
+}
+
+//retourne l'ecart moyen entre deux valeur du tableau sous forme d'un array
+function getEcartMoy(){
+    var ecM = [0,0];
+    ecM[0] = (menuGUI.points[menuGUI.points.length-1].x - menuGUI.points[0].x)/fluidite;
+    ecM[1] = (menuGUI.points[menuGUI.points.length-1].y - menuGUI.points[0].y)/(fluidite*3);
+    return ecM;
+}
+
+//Fonction de detection de colision (Ecart entre x et y +1.5 (Rayon de la pierre))
+function isColide(MaScene, obj,tours){
+    var pos = obj.position;
+    var toReturn;
+    for(var i = 0 ; i<tours;i++){
+        var posPA = MaScene.getObjectByName("pierre-"+i).position;
+        if(Math.floor(pos.x) == Math.floor(posPA.x) && Math.floor(pos.y) == Math.floor(posPA.y)){
+            toReturn = MaScene.getObjectByName("pierre-"+i);
+            console.log("colision avec" + toReturn.name);
+            return toReturn;
+        }
+    }
+    return toReturn;
 }
