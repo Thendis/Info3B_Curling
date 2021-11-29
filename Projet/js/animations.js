@@ -47,7 +47,6 @@ function bruch(menuGUI){ //Ne prend en compte que la derniere valeur (Celle d'ar
         pointsBruched[lastIdx+1].y +=ecM[1];
     } 
     pointsBruched[lastIdx+1].x +=ecM[0];
-    console.log(afficheArray(menuGUI.points,199));
     return pointsBruched;
 }
 
@@ -67,7 +66,6 @@ function deplacePierre(MaScene, menuGUI,pierre, courbe, target,camera) {
         if(cmp>=courbe.length){
             document.getElementById("score").innerHTML = "<p>"+calculPoints(thisPoint,target)+"</p>";
             cmp = 0;
-            menuGUI.pushValue = 0;
             clearInterval(anima);
         }
     },20);

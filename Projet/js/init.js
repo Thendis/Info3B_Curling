@@ -5,7 +5,9 @@ var tours = 0;
 /*MENU GUI*/
 var gui = new dat.GUI({autoPlace: false});
 var customContainer = document.getElementById('guiCont');
-customContainer.appendChild(gui.domElement);
+setTimeout(function(){
+  customContainer.appendChild(gui.domElement);
+}, 100); // Besoin car sinon essai de créer alors que le body n'est pas generé.
 var menuGUI = new function () {
   this.force = 0;
   this.courbe = 0;
@@ -109,6 +111,9 @@ function init() {
 
 //N'actualise pas la caméra
 function nextTurn() {
+  for(menuGUI.pushValue; menuGUI.pushValue>0; menuGUI.pushValue-=1){
+    menuGUI.points.pop();
+  }
   document.getElementById("push").innerHTML = "";
   menuGUI.pierreF = null;
   tours++;
@@ -116,6 +121,7 @@ function nextTurn() {
 
 function pushMe() {
   for (var i = 0; i < 10; i++) {
+    menuGUI.pushValue+=1;
     menuGUI.points = bruch(menuGUI);
   }
 }

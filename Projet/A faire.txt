@@ -2,11 +2,9 @@
 
 - Calcule et affichage des points (Calcule que si dans le cercle)
  
--Modeliser le balaie et l'animation
+- Modeliser le balaie et l'animation
 
 - Afficher la courbe ajouté par le brossage dans une couleur différente
-
-- GUI error console
 
 
 
