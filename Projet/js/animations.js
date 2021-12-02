@@ -65,7 +65,12 @@ function deplacePierre(MaScene, menuGUI,pierre, courbe, target, team, tours) {
             cmp++;
         }
         if(cmp>=courbe.length){
-            team.push(calculPoints(thisPoint,target));
+            if(calculPoints(thisPoint,target)>80){
+                team.push(calculPoints(thisPoint,target));
+            } else {
+                team.push(0);
+            }
+            
             document.getElementById("score").innerHTML = "<p>"+calculPoints(thisPoint,target)+"</p>";
             cmp = 0;
             clearInterval(anima);

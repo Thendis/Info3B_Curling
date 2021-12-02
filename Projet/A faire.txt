@@ -1,12 +1,16 @@
 - Bloquer la commande de lancer lorsque un lancer est déjà en cours
 
-- Calcule et affichage des points (Calcule que si dans le cercle)
+- Affichage de fin (Presque fini)
  
-- Modeliser le balaie et l'animation
+- Modeliser le balaie et l'animation (Modelisation normale etexplication en CSG)
 
 - Afficher la courbe ajouté par le brossage dans une couleur différente
 
--**/**
+- Collision via Meridian des pierres
+	Lors de collision transfert de x points
+	Inversion des coordonné si besoin selon emc
+
+-CR
 
 
 

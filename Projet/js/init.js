@@ -4,6 +4,7 @@ var scoreTeam1 = [];
 var scoreTeam2 = [];
 var target = new THREE.Vector3(900, 0, 0); //Centre de la cible
 var tours = 0;
+
 /*MENU GUI*/
 var gui = new dat.GUI({ autoPlace: false });
 var customContainer = document.getElementById('guiCont');
@@ -75,7 +76,16 @@ function init() {
         gameSet();
       }
     } else {
-      alert("Arret : La fonction de fin n'a pas ete implemente");
+      var sumTeam1 = sum(scoreTeam1);
+      var sumTeam2 = sum(scoreTeam2);
+      if(sumTeam1 > sumTeam2){
+        alert("WIN : Team1");
+      } else if(sumTeam2>sumTeam1){
+        alert("WIN : Team1");
+      } else {
+        alert("DRAW");
+      }
+      clearInterval(game);
     }
   }, 100);
   document.getElementById("webgl").appendChild(rendu.domElement);
@@ -144,5 +154,14 @@ function buildTable(table){
     toReturn += "<td>"+table[i]+"</td>"
   }
   toReturn +="</tr></tbody></table>"
+  return toReturn;
+}
+
+//renvoi la somme d'un tableau
+function sum(tb){
+  var toReturn=0;
+  for(var i = 0; i<tb.length; i++){
+    toReturn+= tb[i];
+  }
   return toReturn;
 }
